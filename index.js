@@ -1,8 +1,8 @@
 import { ApolloServer } from "@apollo/server"; // preserve-line
 import { startStandaloneServer } from "@apollo/server/standalone"; // preserve-line
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
- const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -109,59 +109,51 @@ const resolvers = {
         playlistById: (_, { id }) => playlistById.load(id),
     },
 
-    Mutation:{
-
+    Mutation: {
         createSong: async (_, { input }) => {
-
             const newSong = { ...input };
             await prisma.song.create({ data: newSong });
             return newSong;
-
         },
         createAlbum: async (_, { input }) => {
-
             const newAlbum = { ...input };
             await prisma.album.create({ data: newAlbum });
             return newAlbum;
-
         },
         createPlaylist: async (_, { input }) => {
-
             const newPlaylist = { ...input };
             await prisma.playlist.create({ data: newPlaylist });
             return newPlaylist;
-
         },
         createUser: async (_, { input }) => {
-
             const newUser = { ...input };
             await prisma.user.create({ data: newUser });
             return newUser;
-
         },
-
     },
 
-    User:{
-        playlists: ({ playlistsId }) => playlistsByUserIdLoader.load(playlistsId), // many
+    User: {
+        playlists: ({ playlistsId }) =>
+            playlistsByUserIdLoader.load(playlistsId), // many
         songs: ({ songsId }) => songsByUserIdLoader.load(songsId), // many
         albums: ({ albumsId }) => albumsByUserIdLoader.load(albumsId), // many
     },
 
-    Song:{
-        users: ({ usersId }) => usersBySongIdLoader.load(usersId), // many
-        playlists: ({ playlistsId }) => playlistsBySongIdLoader.load(playlistsId), // many
+    Song: {
+        authors: ({ usersId }) => usersBySongIdLoader.load(usersId), // many
+        playlists: ({ playlistsId }) =>
+            playlistsBySongIdLoader.load(playlistsId), // many
     },
 
-    Album:{
-        users: ({ usersId }) => usersByAlbumIdLoader.load(usersId), // many
+    Album: {
+        authors: ({ usersId }) => usersByAlbumIdLoader.load(usersId), // many
         songs: ({ songsId }) => songsByAlbumIdLoader.load(songsId), // many
     },
 
-    Playlist:{
-        users: ({ usersId }) => usersByPlaylistIdLoader.load(usersId), // many
+    Playlist: {
+        authors: ({ usersId }) => usersByPlaylistIdLoader.load(usersId), // many
         songs: ({ songsId }) => songsByPlaylistIdLoader.load(songsId), // many
-    }
+    },
 };
 
 // The ApolloServer constructor requires two parameters: your schema
