@@ -141,6 +141,27 @@ const resolvers = {
         },
 
     },
+
+    User:{
+        playlists: ({ playlistsId }) => playlistsByUserIdLoader.load(playlistsId), // many
+        songs: ({ songsId }) => songsByUserIdLoader.load(songsId), // many
+        albums: ({ albumsId }) => albumsByUserIdLoader.load(albumsId), // many
+    },
+
+    Song:{
+        users: ({ usersId }) => usersBySongIdLoader.load(usersId), // many
+        playlists: ({ playlistsId }) => playlistsBySongIdLoader.load(playlistsId), // many
+    },
+
+    Album:{
+        users: ({ usersId }) => usersByAlbumIdLoader.load(usersId), // many
+        songs: ({ songsId }) => songsByAlbumIdLoader.load(songsId), // many
+    },
+
+    Playlist:{
+        users: ({ usersId }) => usersByPlaylistIdLoader.load(usersId), // many
+        songs: ({ songsId }) => songsByPlaylistIdLoader.load(songsId), // many
+    }
 };
 
 // The ApolloServer constructor requires two parameters: your schema
