@@ -40,7 +40,6 @@ model Song {
 
 model Album {
   id    Int     @id @default(autoincrement())
-  email String  @unique
   name  String
   author User[] @relation("UserAlbums")
   authorId  Int
