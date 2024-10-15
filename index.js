@@ -54,27 +54,59 @@ const typeDefs = `#graphql
     playlists: [Playlist],
     userById(id: Int!): User,
     songById(id: Int!): Song,
-    albumById(id: Int!): User,
-    userById(id: Int!): User,
+    albumById(id: Int!): Album,
+    playlistById(id: Int!): Playlist,
+  }
+
+  input CreateSongInput {
+    name: String!,
+    authorIds: [Int!],
+    albumId: Int,
+    playlistIds: [Int]
+  }
+
+  input CreateAlbumInput {
+    name: String!,
+    authorIds: [Int!],
+    songIds: [Int!]
+  }
+
+  input CreatePlaylistInput {
+    name: String!,
+    authorIds: [Int!],
+    songIds: [Int!]
+  }
+
+  input CreateUserInput {
+    email: String!,
+    name: String!,
+    playlistIds: [Int!],
+    songIds: [Int!],
+    albumIds: [Int!],
+    artist: Boolean
+  }
+
+  type Mutation {
+    createSong(input: CreateSongInput!): Song
+    createAlbum(input: CreateAlbumInput!): Album
+    createPlaylist(input: CreatePlaylistInput!): Playlist
+    createUser(input: CreateUserInput!): User
   }
 `;
-
-const books = [
-    {
-        title: "The Awakening",
-        author: "Kate Chopin",
-    },
-    {
-        title: "City of Glass",
-        author: "Paul Auster",
-    },
-];
 
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
     Query: {
-        books: () => books,
+        users: () => prisma.user.findMany(),
+        songs: () => prisma.song.findMany(),
+        albums: () => prisma.album.findMany(),
+
+        playlists: () => prisma.playlist.findMany(),
+        userById: (_, { id }) => userById.load(id),
+        songById: (_, { id }) => songById.load(id),
+        albumById: (_, { id }) => albumById.load(id),
+        playlistById: (_, { id }) => playlistById.load(id),
     },
 };
 
