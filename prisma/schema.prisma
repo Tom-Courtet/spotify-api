@@ -31,7 +31,7 @@ model Song {
   id    Int     @id @default(autoincrement())
   name  String
   authors User[] @relation("UserSongs")
-  album Album @relation(fields: [albumId], references: [id])
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
   albumId Int
   playlists Playlist[] @relation("PlaylistSongs")
 }

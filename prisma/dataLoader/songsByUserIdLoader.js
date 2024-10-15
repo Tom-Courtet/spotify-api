@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export const songsByUserIdLoader = new DataLoader(async (authorIds) => {
     const song = await prisma.song.findMany({
-        where: { authorId: { in: authorIds } },
+        where: { userId: { in: authorIds } },
     });
     return authorIds.map((authorId) =>
         books.filter((song) => song.authorId === authorId)
