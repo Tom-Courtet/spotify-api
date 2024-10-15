@@ -193,8 +193,14 @@ app.use(
     '/graphql',
     //cors<cors.CorseRequest>(),
     express.json(),
-    expressMiddleware(server),
-)
+    expressMiddleware(server, {
+        context: async ({ req }) => {
+            return {
+                authenticated: req.authenticated,
+            };
+        },
+    }),
+);
 
 
 app.listen(4000, () => {
