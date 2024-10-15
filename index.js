@@ -6,6 +6,7 @@ import { playlistsByUserIdLoader } from './prisma/dataLoader/playlistsByUserIdLo
 import { songById } from './prisma/dataLoader/songById.js'
 import { songsByUserIdLoader } from './prisma/dataLoader/songsByUserIdLoader.js'
 import express from 'express';
+import cookieParser from "cookie-parser";
 
 const prisma = new PrismaClient(); 
 const typeDefs = `#graphql
@@ -157,8 +158,10 @@ await server.start();
 
 const app = express();
 
+app.use(cookieParser());
 app.use(
     '/graphql',
+    //cors<cors.CorseRequest>(),
     express.json(),
     expressMiddleware(server),
 )
