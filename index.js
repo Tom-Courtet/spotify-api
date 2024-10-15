@@ -1,9 +1,11 @@
-import { ApolloServer } from "@apollo/server"; // preserve-line
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4"; // preserve-line
 import { startStandaloneServer } from "@apollo/server/standalone"; // preserve-line
 import { PrismaClient } from '@prisma/client';
 import { playlistsByUserIdLoader } from './prisma/dataLoader/playlistsByUserIdLoader.js'
 import { songById } from './prisma/dataLoader/songById.js'
 import { songsByUserIdLoader } from './prisma/dataLoader/songsByUserIdLoader.js'
+import express from 'express';
 
 const prisma = new PrismaClient(); 
 const typeDefs = `#graphql
@@ -151,8 +153,19 @@ const server = new ApolloServer({
     resolvers,
 });
 
-const { url } = await startStandaloneServer(server, {
-    listen: { port: 4000 },
-});
+await server.start();
 
-console.log(`🚀  Server ready at: ${url}`);
+const app = express();
+
+app.use(
+    '/graphql',
+    express.json(),
+    expressMiddleware(server),
+)
+
+
+app.listen(4000, () => {
+    console.log(`🚀  Server ready at http://localhost:4000/graphql `);
+})
+
+
