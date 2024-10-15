@@ -108,6 +108,39 @@ const resolvers = {
         albumById: (_, { id }) => albumById.load(id),
         playlistById: (_, { id }) => playlistById.load(id),
     },
+
+    Mutation:{
+
+        createSong: async (_, { input }) => {
+
+            const newSong = { ...input };
+            await prisma.song.create({ data: newSong });
+            return newSong;
+
+        },
+        createAlbum: async (_, { input }) => {
+
+            const newAlbum = { ...input };
+            await prisma.album.create({ data: newAlbum });
+            return newAlbum;
+
+        },
+        createPlaylist: async (_, { input }) => {
+
+            const newPlaylist = { ...input };
+            await prisma.playlist.create({ data: newPlaylist });
+            return newPlaylist;
+
+        },
+        createUser: async (_, { input }) => {
+
+            const newUser = { ...input };
+            await prisma.user.create({ data: newUser });
+            return newUser;
+
+        },
+
+    },
 };
 
 // The ApolloServer constructor requires two parameters: your schema
