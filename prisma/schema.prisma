@@ -24,7 +24,6 @@ model Playlist {
   id        Int     @id @default(autoincrement())
   name     String
   authors User[] @relation("UserPlaylists")
-  authorId  Int
   songs     Song[]   @relation("PlaylistSongs")
 }
 
@@ -32,7 +31,6 @@ model Song {
   id    Int     @id @default(autoincrement())
   name  String
   authors    User[] @relation("UserSongs")
-  authorId  Int
   album Album @relation(fields: [albumId], references: [id])
   albumId Int
   playlists Playlist[] @relation("PlaylistSongs")
@@ -42,6 +40,5 @@ model Album {
   id    Int     @id @default(autoincrement())
   name  String
   author User[] @relation("UserAlbums")
-  authorId  Int
   songs Song[]
 }
