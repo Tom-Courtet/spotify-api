@@ -91,9 +91,18 @@ const typeDefs = `#graphql
   }
 `;
 
+function wrapresolverWithAuthentication(resolver) {
+    return (parent, args, context, info) => {
+        if (!context.authenticated) {
+            throw new Error("Not authenticated !");
+        }
+        return resolver(parent, args, context, info);
+    }
+}
+
 const resolvers = {
     Query: {
-        users: () => prisma.user.findMany(),
+        users: wrapresolverWithAuthentication(() => prisma.user.findMany()),
         songs: () => prisma.song.findMany(),
         albums: () => prisma.album.findMany(),
 
@@ -158,7 +167,28 @@ await server.start();
 
 const app = express();
 
-app.use(cookieParser());
+app.use(cookieParser('mysecret', {
+    sameSite: 'strict',
+    httpOnly: true,
+    signed: true,
+}));
+
+app.get('/login', (req, res) => {
+    res.cookie("mycookie", "myvalue", {
+        signed: true,
+        httpOnly: true,
+        sameSite: 'strict',
+    });
+    res.send("Logged in !");
+})
+
+app.use((req, res, next) => {
+    if (req.signedCookies.mycookie){
+        req.authenticated = true;
+    }
+    next();
+})
+
 app.use(
     '/graphql',
     //cors<cors.CorseRequest>(),
